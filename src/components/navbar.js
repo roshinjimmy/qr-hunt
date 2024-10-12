@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // Updated to next/navigation
-import { auth } from "../../lib/firebase"; // Import the initialized auth from firebase.js
+import { auth } from "../lib/firebase"; // Import the initialized auth from firebase.js
 import { signOut } from "firebase/auth";
 import Link from "next/link";
 
@@ -48,13 +48,13 @@ const Navbar = () => {
               <p className="text-sm">Signed in as: {user.displayName || user.email}</p>
               <button
                 onClick={handleSignOut}
-                className="bg-red-500 px-4 py-2 rounded-md text-sm"
+                className="bg-red-500 hover:bg-red-600 transition duration-200 px-4 py-2 rounded-md text-sm"
               >
                 Sign Out
               </button>
             </>
           ) : (
-            <Link href="/login" className="bg-blue-500 px-4 py-2 rounded-md text-sm">
+            <Link href="/login" className="bg-blue-500 hover:bg-blue-600 transition duration-200 px-4 py-2 rounded-md text-sm">
               Sign In
             </Link>
           )}
@@ -62,10 +62,10 @@ const Navbar = () => {
 
         {/* Navigation Links */}
         <div className="flex items-center space-x-6">
-          <Link href="/leaderboard" className="hover:text-gray-400">
+          <Link href="/leaderboard" className="hover:text-gray-400 transition duration-200">
             Leaderboard
           </Link>
-          <Link href="/scanner" className="hover:text-gray-400">
+          <Link href="/scanner" className="hover:text-gray-400 transition duration-200">
             Scanner
           </Link>
         </div>

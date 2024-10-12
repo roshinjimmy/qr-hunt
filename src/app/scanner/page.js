@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
 import QrFrame from "../assets/qr-frame.svg";

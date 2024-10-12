@@ -1,6 +1,6 @@
 // src/components/Leaderboard.js
 import React, { useEffect, useState } from 'react';
-import { db } from '../../../lib/firebase'; // Adjust the path as needed
+import { db } from '../../lib/firebase'; // Adjust the path as needed
 import { collection, getDocs } from 'firebase/firestore';
 
 const Leaderboard = () => {

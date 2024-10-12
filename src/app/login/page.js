@@ -1,8 +1,9 @@
-// pages/login.js
+"use client"; // Mark this component as a Client Component
+
 import { auth, db } from '../../lib/firebase';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation'; // Update the import
 import { useState } from 'react';
 
 const Login = () => {
