@@ -1,26 +1,20 @@
 import './globals.css';
 import Navbar from '../components/navbar';
-
-export const metadata = {
-  title: "QR Treasure Hunt",
-  description: "Join the QR Treasure Hunt and solve puzzles!",
-};
+import { AuthProvider } from '@/context/authcontext'; // Import AuthProvider
 
 const RootLayout = ({ children }) => {
   return (
-      <html lang="en">
-          <head>
-              <meta charSet="UTF-8" />
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-              <title>{metadata.title}</title>
-              <meta name="description" content={metadata.description} />
-              {/* Add any additional head elements here, like links to stylesheets */}
-          </head>
-          <body>
+    <html lang="en">
+      <head>
+        {/* Head content goes here */}
+      </head>
+      <body className="bg-gray-900 text-white">
+        <AuthProvider> {/* Wrap children with AuthProvider */}
           <Navbar />
           <main>{children}</main>
-          </body>
-      </html>
+        </AuthProvider>
+      </body>
+    </html>
   );
 };
 

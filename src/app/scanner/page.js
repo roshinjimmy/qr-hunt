@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation"; // Import the router for navigation
+import AuthWrapper from "../../components/authwrapper"; // Import AuthWrapper
 
 // Styles
 import "../../components/qrstyles.css";
@@ -15,16 +17,20 @@ const QrReader = () => {
   const videoEl = useRef(null);
   const qrBoxEl = useRef(null);
   const [qrOn, setQrOn] = useState(true);
+  const router = useRouter(); // Initialize the router
 
   // Result
   const [scannedResult, setScannedResult] = useState("");
 
-  // Success
   const onScanSuccess = (result) => {
-    // 🖨 Print the "result" to browser console.
     console.log(result);
-    // ✅ Handle success.
-    setScannedResult(result?.data);
+    // Stop the scanner
+    scanner.current.stop();
+
+    // Redirect to the URL in the QR code
+    if (result?.data) {
+      router.push(result.data); // Redirect to the scanned URL
+    }
   };
 
   // Fail
