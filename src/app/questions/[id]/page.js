@@ -1,84 +1,87 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
+import { doc, getDoc, updateDoc, increment, arrayUnion } from "firebase/firestore"; // Added arrayUnion and increment import
 import { useAuth } from "@/context/authcontext"; // Adjust the path
 import AuthWrapper from "../../../components/authwrapper"; // Adjust the path
 import { db } from "../../../lib/firebase"; // Adjust the path
 
 const QuestionPage = ({ params }) => {
   const { id } = params; // Extracting the id from params
-  const [questionData, setQuestionData] = useState(null); // State to hold the question data
-  const [loading, setLoading] = useState(true); // State to handle loading
-  const [userAnswer, setUserAnswer] = useState(""); // State to handle user's answer input
-  const [feedback, setFeedback] = useState(""); // State to give feedback to the user
-  const { user } = useAuth(); // Getting the current authenticated user from the context
+  const [questionData, setQuestionData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [userAnswer, setUserAnswer] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const { user } = useAuth();
 
-  // Fetch question data from Firestore based on the 'id'
   useEffect(() => {
     const fetchQuestion = async () => {
-      try {
-        const questionDoc = doc(db, "questions", id); // Get a reference to the document
-        const questionSnapshot = await getDoc(questionDoc); // Fetch the document
+      const questionDoc = doc(db, "questions", id);
+      const questionSnapshot = await getDoc(questionDoc);
 
-        if (questionSnapshot.exists()) {
-          setQuestionData(questionSnapshot.data()); // Set the question data if it exists
-        } else {
-          console.error("No such document!"); // Error if no document exists
-        }
-      } catch (error) {
-        console.error("Error fetching question:", error); // Error handling
-      } finally {
-        setLoading(false); // Set loading to false after fetching
+      if (questionSnapshot.exists()) {
+        setQuestionData(questionSnapshot.data());
+      } else {
+        console.error("No such document!");
       }
+      setLoading(false);
     };
 
     if (id) {
-      fetchQuestion(); // Fetch the question if 'id' exists
+      fetchQuestion();
     }
   }, [id]);
 
-  // Function to update user's points in Firestore
-  const awardPointsToUser = async (points) => {
-    const userRef = doc(db, "users", user.uid); // Reference to the user's document in Firestore
-
-    try {
-      // Update the user's points by adding the points of the question
-      await updateDoc(userRef, {
-        points: increment(points) // Increment the points field by the points of the current question
-      });
-
-      setFeedback(`Correct answer! You have been awarded ${points} points.`);
-    } catch (error) {
-      console.error("Error updating user points:", error);
-      setFeedback("Error awarding points. Please try again later.");
-    }
-  };
-
-  // Handle the form submission and check the answer
   const handleAnswerSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
 
     if (!user) {
       setFeedback("You must be logged in to submit an answer.");
       return;
     }
 
-    if (!userAnswer) {
-      setFeedback("Please enter an answer.");
-      return;
-    }
+    try {
+      const questionDocRef = doc(db, "questions", id);
+      const questionSnapshot = await getDoc(questionDocRef);
 
-    // Check if the user's answer matches the correct answer
-    if (questionData.correct_answer.toLowerCase() === userAnswer.trim().toLowerCase()) {
-      // If the answer is correct, award the user points
-      await awardPointsToUser(questionData.points); // Award points from the question
-    } else {
-      setFeedback("Incorrect answer. Try again.");
+      if (!questionSnapshot.exists()) {
+        setFeedback("Question not found.");
+        return;
+      }
+
+      const questionData = questionSnapshot.data();
+
+      // Check if the user has already answered this question
+      const answeredBy = questionData.answeredBy || []; // Get the array or empty if it doesn't exist
+
+      if (answeredBy.includes(user.uid)) {
+        setFeedback("You have already answered this question.");
+        return;
+      }
+
+      // Check if the answer is correct
+      if (userAnswer.trim().toLowerCase() === questionData.correct_answer.trim().toLowerCase()) {
+        // Award points to the user
+        const userRef = doc(db, "users", user.uid);
+        await updateDoc(userRef, {
+          points: increment(questionData.points), // Increment user points
+        });
+
+        // Add the user to the list of people who answered this question
+        await updateDoc(questionDocRef, {
+          answeredBy: arrayUnion(user.uid), // Add user ID to answeredBy array
+        });
+
+        setFeedback(`Correct! You have been awarded ${questionData.points} points.`);
+      } else {
+        setFeedback("Incorrect answer. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting answer:", error);
+      setFeedback("An error occurred while submitting your answer.");
     }
   };
 
-  // Render the page while loading or if no question is found
   if (loading) return <p>Loading...</p>;
   if (!questionData) return <p>Question not found.</p>;
 
@@ -86,9 +89,8 @@ const QuestionPage = ({ params }) => {
     <AuthWrapper>
       <div style={{ padding: "20px" }}>
         <h1>Question</h1>
-        <p>{questionData.question}</p> {/* Display the question */}
-
-        <form onSubmit={handleAnswerSubmit}> {/* Form to submit answer */}
+        <p>{questionData.question}</p>
+        <form onSubmit={handleAnswerSubmit}>
           <input
             type="text"
             value={userAnswer}
@@ -101,8 +103,6 @@ const QuestionPage = ({ params }) => {
             Submit Answer
           </button>
         </form>
-
-        {/* Display feedback after submission */}
         {feedback && <p>{feedback}</p>}
       </div>
     </AuthWrapper>
