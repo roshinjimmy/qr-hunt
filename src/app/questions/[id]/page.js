@@ -1,13 +1,12 @@
-// pages/questions/[id].js
+"use client"; // Mark this component as a Client Component
 
-import { useRouter } from 'next/router';
+import { useParams } from 'next/navigation'; // Use useParams instead of router.query
 import { useEffect, useState } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 
 const QuestionPage = () => {
-    const router = useRouter();
-    const { id } = router.query; // Get the question ID from the URL
+    const { id } = useParams(); // Get the question ID from the dynamic route
     const [questionData, setQuestionData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [userAnswer, setUserAnswer] = useState(''); // State for user's answer

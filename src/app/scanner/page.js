@@ -1,75 +1,99 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+
+// Styles
+import "../../components/qrstyles.css";
+
+// Qr Scanner
 import QrScanner from "qr-scanner";
-import QrFrame from "../assets/qr-frame.svg";
+import QrFrame from "../../assets/qr-frame.svg";
 
 const QrReader = () => {
+  // QR States
   const scanner = useRef(null);
   const videoEl = useRef(null);
   const qrBoxEl = useRef(null);
   const [qrOn, setQrOn] = useState(true);
+
+  // Result
   const [scannedResult, setScannedResult] = useState("");
 
+  // Success
   const onScanSuccess = (result) => {
-    const url = result.data;
-    // Validate URL before redirecting (Optional)
-    if (url.startsWith("http")) {
-      window.location.href = url;
-    } else {
-      console.error("Invalid URL scanned");
-    }
+    // 🖨 Print the "result" to browser console.
+    console.log(result);
+    // ✅ Handle success.
     setScannedResult(result?.data);
   };
 
+  // Fail
   const onScanFail = (err) => {
+    // 🖨 Print the "err" to browser console.
     console.log(err);
   };
 
   useEffect(() => {
-    if (videoEl.current && !scanner.current) {
-      scanner.current = new QrScanner(videoEl.current, onScanSuccess, {
+    if (videoEl?.current && !scanner.current) {
+      // 👉 Instantiate the QR Scanner
+      scanner.current = new QrScanner(videoEl?.current, onScanSuccess, {
         onDecodeError: onScanFail,
         preferredCamera: "environment",
         highlightScanRegion: true,
         highlightCodeOutline: true,
-        overlay: qrBoxEl.current || undefined,
+        overlay: qrBoxEl?.current || undefined,
       });
 
-      scanner.current.start()
+      // 🚀 Start QR Scanner
+      scanner?.current
+        ?.start()
         .then(() => setQrOn(true))
         .catch((err) => {
-          console.error("Error starting QR scanner:", err);
-          setQrOn(false);
+          if (err) setQrOn(false);
         });
     }
 
+    // 🧹 Clean up on unmount.
     return () => {
-      scanner.current?.stop(); // Stop the scanner on unmount
+      if (!videoEl?.current) {
+        scanner?.current?.stop();
+      }
     };
   }, []);
 
+  // ❌ If "camera" is not allowed in browser permissions, show an alert.
   useEffect(() => {
-    if (!qrOn) {
-      alert("Camera is blocked or not accessible. Please allow camera in your browser permissions and reload.");
-    }
+    if (!qrOn)
+      alert(
+        "Camera is blocked or not accessible. Please allow camera in your browser permissions and Reload."
+      );
   }, [qrOn]);
 
   return (
     <div className="qr-reader">
+      {/* QR */}
       <video ref={videoEl}></video>
       <div ref={qrBoxEl} className="qr-box">
-        <img src={QrFrame} alt="Qr Frame" width={256} height={256} className="qr-frame" />
+        <img
+          src={QrFrame}
+          alt="Qr Frame"
+          width={256}
+          height={256}
+          className="qr-frame"
+        />
       </div>
 
+      {/* Show Data Result if scan is success */}
       {scannedResult && (
-        <p style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          zIndex: 99999,
-          color: "white",
-        }}>
+        <p
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: 99999,
+            color: "white",
+          }}
+        >
           Scanned Result: {scannedResult}
         </p>
       )}

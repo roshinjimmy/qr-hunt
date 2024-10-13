@@ -1,3 +1,5 @@
+"use client";
+
 // src/components/Leaderboard.js
 import React, { useEffect, useState } from 'react';
 import { db } from '../../lib/firebase'; // Adjust the path as needed
