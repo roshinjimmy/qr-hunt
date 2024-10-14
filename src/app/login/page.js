@@ -1,4 +1,3 @@
-// src/pages/login.js
 "use client"; // Mark this component as a Client Component
 
 import { auth, db } from '../../lib/firebase';
@@ -7,6 +6,8 @@ import { doc, setDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useAuth } from '@/context/authcontext'; // Import your authentication context
+import Image from 'next/image'; // Import Next.js Image component
+import googleIcon from '../../assets/google-icon.png';
 
 const Login = () => {
     const router = useRouter();
@@ -41,22 +42,27 @@ const Login = () => {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
-            <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
-                <h1 className="text-3xl font-bold mb-6 text-center">Are you ready for the adventure?</h1>
-                {error && <p className="text-red-500 mb-4">{error}</p>}
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-gray-800 via-gray-900 to-black text-white">
+            <div className="bg-gray-800 bg-opacity-80 p-10 rounded-lg shadow-lg w-full max-w-md">
+                <h1 className="text-4xl font-extrabold mb-6 text-center">Join the Adventure!</h1>
+                {error && <p className="text-red-400 mb-4">{error}</p>}
 
                 <button
                     onClick={signInWithGoogle}
-                    className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-5 rounded-lg flex items-center justify-center transition duration-300 ease-in-out transform hover:scale-105 shadow-lg"
                 >
-                    <img 
-                        src="/google-icon.svg" 
+                    <Image 
+                        src={googleIcon}
                         alt="Google Icon" 
-                        className="w-5 h-5 mr-2" 
+                        width={24} // Width of the icon
+                        height={24} // Height of the icon
+                        className="mr-2" 
                     />
                     Sign in with Google
                 </button>
+                <p className="mt-4 text-center text-sm text-gray-400">
+                    By signing in, you agree to our Terms of Service and Privacy Policy.
+                </p>
             </div>
         </div>
     );
