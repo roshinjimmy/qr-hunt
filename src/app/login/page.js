@@ -2,7 +2,7 @@
 
 import { auth, db } from '../../lib/firebase';
 import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useAuth } from '@/context/authcontext'; // Import your authentication context
@@ -21,13 +21,24 @@ const Login = () => {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
 
-            // Store user in Firestore if not already present
-            await setDoc(doc(db, 'users', user.uid), {
-                email: user.email,
-                displayName: user.displayName,
-                points: 0,
-                updatedAt: Timestamp.now(),
-            });
+            const userRef = doc(db, 'users', user.uid);
+            const userDoc = await getDoc(userRef);
+
+            // Only set points to 0 if the user document does not exist
+            if (!userDoc.exists()) {
+                await setDoc(userRef, {
+                    email: user.email,
+                    displayName: user.displayName,
+                    points: 0,
+                    updatedAt: Timestamp.now(),
+                });
+            } else {
+                // If the user document exists, update only necessary fields (e.g., email, displayName)
+                await setDoc(userRef, {
+                    email: user.email,
+                    displayName: user.displayName,
+                }, { merge: true });
+            }
 
             // Redirect after successful login
             router.push('/scanner');
