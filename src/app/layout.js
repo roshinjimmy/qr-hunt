@@ -7,6 +7,7 @@ const RootLayout = ({ children }) => {
     <html lang="en">
       <head>
         {/* Head content goes here */}
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="bg-gray-900 text-white">
         <AuthProvider> {/* Wrap children with AuthProvider */}
