@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useAuth } from '@/context/authcontext'; // Import your authentication context
 import Image from 'next/image'; // Import Next.js Image component
 import googleIcon from '../../assets/google-icon.png';
+import { Timestamp } from "firebase/firestore";
 
 const Login = () => {
     const router = useRouter();
@@ -25,6 +26,7 @@ const Login = () => {
                 email: user.email,
                 displayName: user.displayName,
                 points: 0,
+                updatedAt: Timestamp.now(),
             });
 
             // Redirect after successful login
