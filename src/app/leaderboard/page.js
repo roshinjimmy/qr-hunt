@@ -49,7 +49,7 @@ const Leaderboard = () => {
           <h1 className="text-3xl font-bold text-center mb-6">Leaderboard</h1>
           <div className="grid grid-cols-1 gap-6">
             <div className="header w-full h-20 flex flex-row justify-between items-center text-[#ffffff] bg-[#80cbc4] text-xl font-poppins px-12 font-semibold shadow-[#0F6464ff] shadow-lg">
-              <div className="text-center">Rank No</div>
+              <div className="text-center">Rank</div>
               <div className="text-center">Participant</div>
               <div className="text-center">Points</div>
             </div>

@@ -2,21 +2,34 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { auth } from "../../lib/firebase"; // Import Firebase auth
+import { auth, db } from "../../lib/firebase"; // Import Firebase auth and db
 import { signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import AuthWrapper from "@/components/authwrapper";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null); // Store user data from Firestore
   const router = useRouter();
 
   // Fetch signed-in user info
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+    const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
+
+        // Fetch the user's data from Firestore, including points
+        const userDocRef = doc(db, "users", currentUser.uid);
+        const userDocSnapshot = await getDoc(userDocRef);
+
+        if (userDocSnapshot.exists()) {
+          setUserData(userDocSnapshot.data());
+        } else {
+          console.error("User document not found in Firestore");
+        }
       } else {
         setUser(null);
+        setUserData(null);
       }
     });
 
@@ -46,6 +59,10 @@ const Profile = () => {
             <p className="mb-4">
               <strong>Email: </strong>
               {user.email}
+            </p>
+            <p className="mb-4">
+              <strong>Points: </strong>
+              {userData ? userData.points : "Loading..."}
             </p>
             <button
               onClick={handleSignOut}
