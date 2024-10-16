@@ -4,9 +4,8 @@ import Image from 'next/image';
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "../lib/firebase";
-import { signOut } from "firebase/auth";
 import Link from "next/link";
-import logo from '../assets/TLE.png'
+import logo from '../assets/TLE.png';
 
 const Navbar = () => {
   const router = useRouter();
@@ -16,32 +15,28 @@ const Navbar = () => {
   // Fetch signed-in user info
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-      } else {
-        setUser(null);
-      }
+      setUser(currentUser);
     });
 
     return () => unsubscribe();
   }, []);
 
   return (
-    <nav className="px-6 py-2 relative" style={{ backgroundColor: '#C1E4E4', color: '#047979' }}>
-      <div className="container mx-auto flex  items-center">
+    <nav className="px-6 py-2 relative bg-[#C1E4E4] text-[#047979]">
+      <div className="container mx-auto flex items-center justify-between">
         <Image 
           src={logo} 
           alt="logo" 
           className="w-10 mb-2" 
-          style={{height:'5%', width:'5%', marginRight:'6px'}}
-      />
-        {/* Title */}
+          style={{ height: '5%', width: '5%', marginRight: '6px' }}
+        />
         <h1 className="text-lg font-bold">QR Hunt</h1>
 
         {/* Hamburger Icon for Mobile View */}
         <button
           className="block md:hidden focus:outline-none"
           onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle menu"
         >
           <svg
             className="w-6 h-6"
@@ -60,7 +55,7 @@ const Navbar = () => {
         </button>
 
         {/* Navigation Links for Desktop */}
-        <div className="hidden md:flex space-x-6 font-lg items-center justify-center justify-inbetween" style={{color:'rgba(4,121,121,1', marginLeft:'62%'}}>
+        <div className="hidden md:flex space-x-6 items-center">
           <Link href="/scanner" className="hover:text-gray-400 transition duration-200">
             Scanner
           </Link>
@@ -83,7 +78,7 @@ const Navbar = () => {
         {/* Mobile Fullscreen Menu */}
         {isMobileMenuOpen && (
           <div className="fixed inset-0 bg-gray-900 bg-opacity-95 flex flex-col z-50">
-            <ul className="space-y-8 text-center">
+            <ul className="space-y-8 text-center mt-10">
               <li>
                 <Link
                   href="/scanner"
@@ -107,7 +102,6 @@ const Navbar = () => {
                   href="/profile"
                   className="text-white text-2xl hover:text-gray-400 transition duration-200"
                   onClick={() => setMobileMenuOpen(false)}
-                  style={{marginTop:'10px'}}
                 >
                   Profile
                 </Link>
