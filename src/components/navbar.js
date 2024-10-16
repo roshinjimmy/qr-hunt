@@ -112,7 +112,7 @@ const Navbar = () => {
                 <li>
                   <Link
                     href="/login"
-                    className="bg-blue-600 hover:bg-blue-700 transition duration-200 px-6 py-3 rounded-full text-xl text-white"
+                    className="bg-[#0F6464] hover:bg-[#0B5454] transition duration-200 px-6 py-3 rounded-full text-xl text-white"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Sign In
