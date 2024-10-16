@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { doc, getDoc, updateDoc, increment, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, updateDoc, increment, arrayUnion, Timestamp } from "firebase/firestore";
 import { useAuth } from "@/context/authcontext";
 import AuthWrapper from "../../../components/authwrapper";
 import { db } from "../../../lib/firebase";
-import { Timestamp } from "firebase/firestore";
 
 const QuestionPage = ({ params }) => {
   const { id } = params;
@@ -51,7 +50,6 @@ const QuestionPage = ({ params }) => {
       }
 
       const questionData = questionSnapshot.data();
-
       const answeredBy = questionData.answeredBy || [];
 
       if (answeredBy.includes(user.uid)) {
@@ -63,13 +61,13 @@ const QuestionPage = ({ params }) => {
         const userRef = doc(db, "users", user.uid);
         await updateDoc(userRef, {
           points: increment(questionData.points),
-          updatedAt: Timestamp.now(), // Update the timestamp whenever points are updated
+          updatedAt: Timestamp.now(),
         });
-      
+
         await updateDoc(questionDocRef, {
           answeredBy: arrayUnion(user.uid),
         });
-      
+
         setFeedback(`Correct! You have been awarded ${questionData.points} points.`);
       } else {
         setFeedback("Incorrect answer. Please try again.");
@@ -85,9 +83,9 @@ const QuestionPage = ({ params }) => {
 
   return (
     <AuthWrapper>
-      <div className="max-w-xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
-        <h1 className="text-2xl font-bold text-center mb-4">Solve the Question</h1>
-        <p className="text-lg text-gray-700 mb-6">{questionData.question}</p>
+      <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md mt-10" style={{ backgroundColor: "#E8F8F8", color: "#0F6464" }}>
+        <h1 className="text-3xl font-bold text-center mb-4" style={{ color: "#0F6464" }}>Solve the Question</h1>
+        <p className="text-lg mb-6" style={{ color: "#047979" }}>{questionData.question}</p>
         <form onSubmit={handleAnswerSubmit} className="flex flex-col">
           <input
             type="text"
@@ -95,23 +93,20 @@ const QuestionPage = ({ params }) => {
             onChange={(e) => setUserAnswer(e.target.value)}
             placeholder="Enter your answer"
             required
-            className="border border-gray-300 p-3 rounded mb-4 text-gray-800 focus:outline-none focus:border-blue-500"
-            style={{ backgroundColor: "#f9f9f9" }} // Light background for better contrast
+            className="p-3 rounded-lg mb-4 focus:outline-none shadow-sm"
+            style={{ backgroundColor: "#FFFFFF", border: "1px solid #0C8B8B", color: "#0F6464" }}
           />
           <button
             type="submit"
-            className="bg-blue-500 text-white p-3 rounded hover:bg-blue-600 transition"
+            className="py-2 px-6 rounded-lg text-white transition duration-300 ease-in-out transform hover:scale-105"
+            style={{ backgroundColor: "#0C8B8B", boxShadow: "-4px 4px 0px rgba(11, 135, 135, 0.8)" }}
           >
             Submit Answer
           </button>
         </form>
         {feedback && (
           <p
-            className={`mt-4 p-2 rounded text-center ${
-              feedback.startsWith("Correct")
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
+            className={`mt-4 p-3 rounded-lg text-center ${feedback.startsWith("Correct") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
           >
             {feedback}
           </p>
