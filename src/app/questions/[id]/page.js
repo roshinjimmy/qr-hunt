@@ -5,6 +5,7 @@ import { doc, getDoc, updateDoc, increment, arrayUnion } from "firebase/firestor
 import { useAuth } from "@/context/authcontext";
 import AuthWrapper from "../../../components/authwrapper";
 import { db } from "../../../lib/firebase";
+import { Timestamp } from "firebase/firestore";
 
 const QuestionPage = ({ params }) => {
   const { id } = params;
@@ -62,12 +63,13 @@ const QuestionPage = ({ params }) => {
         const userRef = doc(db, "users", user.uid);
         await updateDoc(userRef, {
           points: increment(questionData.points),
+          updatedAt: Timestamp.now(), // Update the timestamp whenever points are updated
         });
-
+      
         await updateDoc(questionDocRef, {
           answeredBy: arrayUnion(user.uid),
         });
-
+      
         setFeedback(`Correct! You have been awarded ${questionData.points} points.`);
       } else {
         setFeedback("Incorrect answer. Please try again.");

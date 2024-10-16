@@ -1,10 +1,12 @@
 "use client"; // Mark this component as a Client Component
 
+import Image from 'next/image';
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "../lib/firebase";
 import { signOut } from "firebase/auth";
 import Link from "next/link";
+import logo from '../assets/TLE.png'
 
 const Navbar = () => {
   const router = useRouter();
@@ -25,8 +27,14 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-gray-800 text-white px-6 py-4 relative">
-      <div className="container mx-auto flex justify-between items-center">
+    <nav className="px-6 py-2 relative" style={{ backgroundColor: '#C1E4E4', color: '#047979' }}>
+      <div className="container mx-auto flex  items-center">
+        <Image 
+          src={logo} 
+          alt="logo" 
+          className="w-10 mb-2" 
+          style={{height:'5%', width:'5%', marginRight:'6px'}}
+      />
         {/* Title */}
         <h1 className="text-lg font-bold">QR Hunt</h1>
 
@@ -52,7 +60,7 @@ const Navbar = () => {
         </button>
 
         {/* Navigation Links for Desktop */}
-        <div className="hidden md:flex space-x-6">
+        <div className="hidden md:flex space-x-6 font-lg items-center justify-center justify-inbetween" style={{color:'rgba(4,121,121,1', marginLeft:'62%'}}>
           <Link href="/scanner" className="hover:text-gray-400 transition duration-200">
             Scanner
           </Link>
@@ -65,7 +73,7 @@ const Navbar = () => {
           {!user && (
             <Link
               href="/login"
-              className="bg-blue-500 hover:bg-blue-600 transition duration-200 px-4 py-2 rounded-md text-sm"
+              className="bg-white hover:bg-[rgba(12,130,130,0.8)] hover:text-white transition duration-200 px-4 py-2 text-sm rounded-[11px]"
             >
               Sign In
             </Link>
@@ -74,7 +82,7 @@ const Navbar = () => {
 
         {/* Mobile Fullscreen Menu */}
         {isMobileMenuOpen && (
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-95 flex flex-col items-center justify-center z-50">
+          <div className="fixed inset-0 bg-gray-900 bg-opacity-95 flex flex-col z-50">
             <ul className="space-y-8 text-center">
               <li>
                 <Link
@@ -99,6 +107,7 @@ const Navbar = () => {
                   href="/profile"
                   className="text-white text-2xl hover:text-gray-400 transition duration-200"
                   onClick={() => setMobileMenuOpen(false)}
+                  style={{marginTop:'10px'}}
                 >
                   Profile
                 </Link>
