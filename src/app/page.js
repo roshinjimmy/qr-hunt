@@ -43,29 +43,41 @@ const HomePage = () => {
             
             <div style={{marginLeft:'-250px'}}>
             
-            
-            <Image src={cubo} alt="cubo"
-            width={50} height={50} className='left-0 top-0 md:hidden'></Image>
-            <button 
-                    onClick={handleStartNow} 
-                    className="hover:bg-green-700 text-white  py-2 px-14 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 -mt-4 ml-9 md:mt-10" 
-                    style={{ backgroundColor: '#0C8B8B', boxShadow: `-8px 8px 0px rgba(11, 135, 135, 0.8)`,  borderRadius: '12px', position:'absolute' }}
-                >
-                    Join the Adventure
-                </button>
+            <div className="flex justify-center items-center">
+            <button
+  onClick={handleStartNow}
+  className="hover:bg-green-700 text-white py-2 px-14 shadow-lg transition duration-300 ease-in-out transform hover:scale-105 ml-40 md:mt-10"
+  style={{
+    backgroundColor: '#0C8B8B',
+    boxShadow: `-8px 8px 0px rgba(11, 135, 135, 0.8)`,
+    borderRadius: '12px',
+    position: 'relative', /* Make the button a relative container */
+  }}
+>
+  <Image
+    src={cubo}
+    alt="cubo"
+    width={50}
+    height={50}
+    className="absolute bottom-0 left-0" /* Position the image absolutely within the button */
+  />
+  Join the Adventure
+</button>
+</div>
 
                
 
             </div>
             
-            <div className="my-8">
-                <Image 
-                    src={landingImg} 
-                    alt="Treasure Hunt" 
-                    className="w-68 mb-8 mt-40 md:mt-0 w-90 mt-30 " 
-                    
-                />
-            </div>
+            <div className="my-16 flex justify-center">
+    <Image 
+        src={landingImg} 
+        alt="Treasure Hunt" 
+        className="w-full max-w-2xl mb-10 mt-20 md:mt-0" 
+        layout="responsive" // Ensures the image maintains aspect ratio
+        objectFit="cover" // Adjusts how the image fits within its container
+    />
+</div>
             <Image 
                     src={circle} 
                     alt="circle" 
