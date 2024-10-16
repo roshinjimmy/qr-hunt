@@ -22,15 +22,17 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="px-6 py-2 relative bg-[#C1E4E4] text-[#047979]">
+    <nav className="bg-[#E8F8F8] text-[#0F6464] shadow-md p-4">
       <div className="container mx-auto flex items-center justify-between">
-        <Image 
-          src={logo} 
-          alt="logo" 
-          className="w-10 mb-2" 
-          style={{ height: '5%', width: '5%', marginRight: '6px' }}
-        />
-        <h1 className="text-lg font-bold">QR Hunt</h1>
+        <div className="flex items-center">
+          <Image 
+            src={logo} 
+            alt="logo" 
+            className="h-12 mr-3" // Set only height to keep aspect ratio
+            style={{ height: '3rem', width: 'auto' }} // Responsive height with auto width
+          />
+          <h1 className="text-2xl font-bold">QR Hunt</h1>
+        </div>
 
         {/* Hamburger Icon for Mobile View */}
         <button
@@ -39,7 +41,7 @@ const Navbar = () => {
           aria-label="Toggle menu"
         >
           <svg
-            className="w-6 h-6"
+            className="w-8 h-8 text-[#0F6464]"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -55,20 +57,20 @@ const Navbar = () => {
         </button>
 
         {/* Navigation Links for Desktop */}
-        <div className="hidden md:flex space-x-6 items-center">
-          <Link href="/scanner" className="hover:text-gray-400 transition duration-200">
+        <div className="hidden md:flex space-x-8 items-center">
+          <Link href="/scanner" className="hover:text-gray-600 transition duration-200">
             Scanner
           </Link>
-          <Link href="/leaderboard" className="hover:text-gray-400 transition duration-200">
+          <Link href="/leaderboard" className="hover:text-gray-600 transition duration-200">
             Leaderboard
           </Link>
-          <Link href="/profile" className="hover:text-gray-400 transition duration-200">
+          <Link href="/profile" className="hover:text-gray-600 transition duration-200">
             Profile
           </Link>
           {!user && (
             <Link
               href="/login"
-              className="bg-white hover:bg-[rgba(12,130,130,0.8)] hover:text-white transition duration-200 px-4 py-2 text-sm rounded-[11px]"
+              className="bg-[#0F6464] text-white hover:bg-[#0B5454] transition duration-200 px-4 py-2 rounded-full"
             >
               Sign In
             </Link>
@@ -77,12 +79,12 @@ const Navbar = () => {
 
         {/* Mobile Fullscreen Menu */}
         {isMobileMenuOpen && (
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-95 flex flex-col z-50">
+          <div className="fixed inset-0 bg-[#047979] bg-opacity-95 flex flex-col z-50">
             <ul className="space-y-8 text-center mt-10">
               <li>
                 <Link
                   href="/scanner"
-                  className="text-white text-2xl hover:text-gray-400 transition duration-200"
+                  className="text-white text-3xl hover:text-gray-300 transition duration-200"
                   onClick={() => setMobileMenuOpen(false)} // Close menu on click
                 >
                   Scanner
@@ -91,7 +93,7 @@ const Navbar = () => {
               <li>
                 <Link
                   href="/leaderboard"
-                  className="text-white text-2xl hover:text-gray-400 transition duration-200"
+                  className="text-white text-3xl hover:text-gray-300 transition duration-200"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Leaderboard
@@ -100,7 +102,7 @@ const Navbar = () => {
               <li>
                 <Link
                   href="/profile"
-                  className="text-white text-2xl hover:text-gray-400 transition duration-200"
+                  className="text-white text-3xl hover:text-gray-300 transition duration-200"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Profile
@@ -110,7 +112,7 @@ const Navbar = () => {
                 <li>
                   <Link
                     href="/login"
-                    className="bg-blue-500 hover:bg-blue-600 transition duration-200 px-6 py-3 rounded-md text-xl text-white"
+                    className="bg-blue-600 hover:bg-blue-700 transition duration-200 px-6 py-3 rounded-full text-xl text-white"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Sign In
