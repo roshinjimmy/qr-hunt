@@ -34,13 +34,13 @@ const Leaderboard = () => {
               <div className=" text-center ">Participant</div>
               <div className=" text-center ">Points</div>
             </div>
-            {users.map((user) => {
+            {users.map((user, index) => {
               return(
               <div
                 key={user.id}
                 className="header w-full h-20 flex flex-row justify-between items-center text-[#0F6464] bg-[#C1E4E4] text-xl font-poppins px-12 font-semibold shadow-[#0F6464ff] shadow-lg"
               >
-                <div className=" text-center ">{user.rank || 0}</div>
+                <div className=" text-center ">{index + 1}</div>
                 <div className=" text-center ">{user.displayName}</div>
                 <div className=" text-center ">{user.points}</div>
               </div>
