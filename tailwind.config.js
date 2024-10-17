@@ -14,6 +14,9 @@ module.exports = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        sans: ['var(--font-poppins)', 'sans-serif'], // Add Poppins as your default font
+      },
     },
   },
   plugins: [],
