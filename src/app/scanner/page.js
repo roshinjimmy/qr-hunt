@@ -1,12 +1,8 @@
 "use client";
-
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation"; // Import the router for navigation
-import AuthWrapper from "../../components/authwrapper"; // Import AuthWrapper
-
 // Styles
 import "../../components/qrstyles.css";
-
 // Qr Scanner
 import QrScanner from "qr-scanner";
 import ProfileGuard from "@/components/pfpcheck";
@@ -30,6 +26,7 @@ const QrReader = () => {
     // Redirect to the URL in the QR code
     if (result?.data) {
       router.push(result.data); // Redirect to the scanned URL
+      //router.push("/questions/someId"); // Example static redirect
     }
   };
 
