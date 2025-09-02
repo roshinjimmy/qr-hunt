@@ -1,69 +1,41 @@
-"use client"; // Mark this component as a Client Component
+"use client";
 import { Poppins } from '@next/font/google';
-
-const poppins = Poppins({
-    subsets: ['latin'],  // Specify subset
-    weight: ['400', '500', '600', '700'],  // Font weights
-    variable: '--font-poppins',  // Custom CSS variable to use later
-});
-
-import { auth, db } from '../../lib/firebase';
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { supabase } from '@/lib/supabase';  // Make sure this import points to your supabase client
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useAuth } from '@/context/authcontext'; // Import your authentication context
-import Image from 'next/image'; // Import Next.js Image component
+import Image from 'next/image';
 import googleIcon from '../../assets/google-icon.png';
 import cubo from '../../assets/cubo.png';
 import ellipse from '../../assets/ellipse.png';
 import group from '../../assets/group.png';
-import { Timestamp } from "firebase/firestore";
+
+const poppins = Poppins({
+    subsets: ['latin'],
+    weight: ['400', '500', '600', '700'],
+    variable: '--font-poppins',
+});
 
 const Login = () => {
     const router = useRouter();
-    const { user } = useAuth(); // Access user from context
     const [error, setError] = useState('');
 
     const signInWithGoogle = async () => {
-        const googleProvider = new GoogleAuthProvider();
         try {
-            const result = await signInWithPopup(auth, googleProvider);
-            const user = result.user;
+            const { data, error: signInError } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: `${window.location.origin}/scanner`, 
+                }
+            });
 
-            const userRef = doc(db, 'users', user.uid);
-            const userDoc = await getDoc(userRef);
-
-            // Only set points to 0 if the user document does not exist
-            if (!userDoc.exists()) {
-                await setDoc(userRef, {
-                    email: user.email,
-                    displayName: user.displayName,
-                    points: 0,
-                    updatedAt: Timestamp.now(),
-                });
-            } else {
-                // If the user document exists, update only necessary fields (e.g., email, displayName)
-                await setDoc(userRef, {
-                    email: user.email,
-                    displayName: user.displayName,
-                }, { merge: true });
+            if (signInError) {
+                throw signInError;
             }
-
-            // Redirect after successful login
-            router.push('/scanner');
         } catch (error) {
-            console.error("Error during Google Sign-In:", error.message);
-            setError('Failed to sign in with Google');
+            console.error('Error during sign-in:', error);
+            setError('Failed to sign in. Please try again.');
         }
     };
-
-    // Redirect if the user is already logged in
-    if (user) {
-        router.push('/scanner');
-        return null; // Prevent rendering of the login page
-    }
-
     return (
         <div className={`${poppins.variable} font-sans flex flex-col items-center justify-center min-h-screen bg-[#fff] to-black text-white`}>
             <div className="relative z-10 bg-[#CFEAEA] bg-opacity-100 p-6 sm:p-8 md:p-10 lg:p-16 shadow-lg w-full max-w-xs sm:max-w-sm md:max-w-lg transition-shadow duration-700 hover:shadow-[8px_8px_20px_0px_rgba(13,148,136,0.6)] 
