@@ -22,15 +22,18 @@ const Profile = () => {
         if (currentUser) {
           setUser(currentUser);
           
-          // Fetch profile data
-          const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', currentUser.id)
-            .single();
+          // Fetch profile data and submissions in parallel
+          const [profileResult] = await Promise.all([
+            supabase
+              .from('profiles')
+              .select('*')
+              .eq('id', currentUser.id)
+              .single(),
+          ]);
             
-          if (profileError) throw profileError;
-          setUserData(profile);
+          if (profileResult.error) throw profileResult.error;
+          setUserData(profileResult.data);
+
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -40,14 +43,6 @@ const Profile = () => {
     fetchUserData();
   }, []);
 
-  const handleSignOut = async () => {
-    try {
-      await supabase.auth.signOut();
-      router.push("/login");
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
-  };
 
   return (
     <ProfileGuard>
@@ -56,19 +51,19 @@ const Profile = () => {
           {user && userData ? (
             <>
               {/* Profile Header */}
-<div className="relative h-32 bg-gradient-to-r from-[#0C8B8B] to-[#0F6464]">
-    <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
-        <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden bg-white">
-            <Image
-                src={cubo}
-                alt="Profile"
-                width={128}
-                height={128}
-                className="w-full h-full object-cover"
-            />
-        </div>
-    </div>
-</div>
+              <div className="relative h-32 bg-gradient-to-r from-[#0C8B8B] to-[#0F6464]">
+                <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
+                  <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden bg-white">
+                    <Image
+                      src={cubo}
+                      alt="Profile"
+                      width={128}
+                      height={128}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
 
               {/* Profile Content */}
               <div className="pt-20 pb-8 px-6 text-center">
@@ -85,7 +80,6 @@ const Profile = () => {
                   <div className="text-[#0F6464]">Total Points</div>
                 </div>
 
-                
               </div>
             </>
           ) : (

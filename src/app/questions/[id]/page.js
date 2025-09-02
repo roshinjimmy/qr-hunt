@@ -61,6 +61,7 @@ useEffect(() => {
         .select('*')
         .eq('user_id', user.id)
         .eq('question_id', id)
+        .eq('is_correct', true)
         .single();
 
       if (existingSubmission) {
