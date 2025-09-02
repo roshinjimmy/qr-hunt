@@ -9,6 +9,7 @@ import "../../components/qrstyles.css";
 
 // Qr Scanner
 import QrScanner from "qr-scanner";
+import ProfileGuard from "@/components/pfpcheck";
 
 const QrReader = () => {
   // QR States
@@ -75,6 +76,7 @@ const QrReader = () => {
   }, [qrOn]);
 
   return (
+    <ProfileGuard>
     <div className="qr-reader">
       {/* QR */}
       <video ref={videoEl}></video>
@@ -94,6 +96,7 @@ const QrReader = () => {
         </p>
       )}
     </div>
+    </ProfileGuard>
   );
 };
 

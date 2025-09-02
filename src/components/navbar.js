@@ -3,25 +3,17 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { auth } from "../lib/firebase";
+import { supabase } from "../lib/supabase";
 import Link from "next/link";
 import logo from "../assets/TLE.png";
 
 const Navbar = () => {
   const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false); // State to handle mobile menu toggle
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Fetch signed-in user info
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((currentUser) => {
-      setUser(currentUser);
-    });
 
-    return () => unsubscribe();
-  }, []);
 
-  return (
+ return (
     <nav className="bg-[#E8F8F8] text-[#0F6464] shadow-md p-4">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center">
@@ -81,14 +73,6 @@ const Navbar = () => {
           >
             Profile
           </Link>
-          {!user && (
-            <Link
-              href="/login"
-              className="bg-[#0F6464] text-white hover:bg-[#0B5454] transition duration-200 px-4 py-2 rounded-full"
-            >
-              Sign In
-            </Link>
-          )}
         </div>
 
         {/* Mobile Fullscreen Menu */}
@@ -122,17 +106,6 @@ const Navbar = () => {
                   Profile
                 </Link>
               </li>
-              {!user && (
-                <li>
-                  <Link
-                    href="/login"
-                    className="bg-[#0F6464] hover:bg-[#0B5454] transition duration-200 px-6 py-3 rounded-full text-xl text-white"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Sign In
-                  </Link>
-                </li>
-              )}
             </ul>
           </div>
         )}
