@@ -3,7 +3,6 @@ import { Poppins } from '@next/font/google';
 import { supabase } from '@/lib/supabase';  // Make sure this import points to your supabase client
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useAuth } from '@/context/authcontext';
 import Image from 'next/image';
 import googleIcon from '../../assets/google-icon.png';
 import cubo from '../../assets/cubo.png';
@@ -18,7 +17,6 @@ const poppins = Poppins({
 
 const Login = () => {
     const router = useRouter();
-    const { user } = useAuth();
     const [error, setError] = useState('');
 
     const signInWithGoogle = async () => {
